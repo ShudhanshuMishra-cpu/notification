@@ -1,0 +1,63 @@
+<!-- post-request.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POST Request</title>
+</head>
+<body>
+  <h1>Add a Post</h1>
+  <form id="postForm">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required>
+    <br>
+    <label for="content">Content:</label>
+    <textarea id="content" name="content" rows="4" required></textarea>
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <a id="abc" href="watchData.html" style="font-size: 30px;">See Data</a>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+
+  <script >
+
+    // post-script.js
+// post-script.js
+document.getElementById('postForm').addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const title = document.getElementById('title').value;
+  const content = document.getElementById('content').value;
+
+  axios.post('http://localhost:3000/api/posts', { title, content })
+    .then(response => {
+      console.log('Post added successfully:', response.data);
+      alert('Post added successfully!');
+    })
+    .catch(error => {
+      console.error('Error adding post:', error.response.data.error);
+      alert('Error adding post. Check console for details.');
+    });
+});
+
+const socket = io('http://localhost:3000');
+
+socket.on('dataAdded', (data) => {
+  // Update sidebar with red dot and notification under xyz option
+  console.log(data);
+  updateSidebar(data);
+});
+
+function updateSidebar(data) {
+  const abc = document.getElementById('abc');
+  abc.style.color = 'red';  // Change the color to red when data is added
+}
+
+
+  </script>
+</body>
+</html>
